@@ -163,6 +163,23 @@ class Cheri_rr<bits<7> funct7, string opcodestr, RegisterClass rdClass=GPCR,
     : RVInstR<funct7, 0, OPC_CHERI, (outs rdClass:$rd),
               (ins rs1Class:$rs1, rs2Class:$rs2),
               opcodestr, "$rd, $rs1, $rs2">;
+                        
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+class Truisa_rr<bits<7> funct7, string opcodestr, RegisterClass rdClass=GPCR,
+               RegisterClass rs2Class=GPR, RegisterClass rs1Class=GPCR>
+    : RVInstR<funct7, 3, OPC_MISC_MEM, (outs rdClass:$rd),
+              (ins rs1Class:$rs1, rs2Class:$rs2),
+              opcodestr, "$rd, $rs1, $rs2">;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+class Truisa_dlb<bits<7> funct7, string opcodestr,
+               RegisterClass rs1Class=GPCR>
+    : RVInstR<funct7, 0, OPC_MISC_MEM, (outs),
+              (ins rs1Class:$rs1),
+              opcodestr, "$rs1"> {
+  let rd = 0;
+  let rs2 = 0;
+}
 
 let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
 class Cheri_ri<bits<3> funct3, string opcodestr, bit simm>
@@ -411,6 +428,13 @@ let isReMaterializable = 1, isAsCheapAsAMove = 1 in
 def CIncOffsetImm   : Cheri_ri<0x1, "cincoffset", 1>;
 // Note: mayTrap is optimized in RISCVInstrInfo::isGuaranteedNotToTrap()
 let mayTrap = 1 in {
+// Truisa Instruction
+def TSetDescr       : Truisa_rr<0x4, "tsetdescr">;
+def TBuildDescr     : Truisa_rr<0x5, "tbuilddescr">;
+def TFENCE_VMA      : Truisa_dlb<0x9, "tfence_vma">;
+def TDLBRW          : Truisa_dlb<0xa, "tdlbrw">;
+// Truisa Instruction
+
 def CSetBounds      : Cheri_rr<0x8, "csetbounds">;
 def CSetBoundsExact : Cheri_rr<0x9, "csetboundsexact">;
 def CSetBoundsImm   : Cheri_ri<0x2, "csetbounds", 0>;
