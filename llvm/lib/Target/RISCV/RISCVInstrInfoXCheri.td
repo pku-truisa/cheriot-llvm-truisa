@@ -431,7 +431,7 @@ let mayTrap = 1 in {
 // Truisa Instruction
 def TSetDescr       : Truisa_rr<0x4, "tsetdescr">;
 def TBuildDescr     : Truisa_rr<0x5, "tbuilddescr">;
-def TFENCE_VMA      : Truisa_dlb<0x9, "tfence_vma">;
+def TFENCE_VMA      : Truisa_dlb<0x9, "tfence.vma">;
 def TDLBRW          : Truisa_dlb<0xa, "tdlbrw">;
 // Truisa Instruction
 
